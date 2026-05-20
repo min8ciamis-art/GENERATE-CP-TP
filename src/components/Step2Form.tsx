@@ -168,23 +168,19 @@ export default function Step2Form({ state, onChange, onPrev, onNext }: Step2Form
           <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300 block mb-3">
             Pilih Jenjang Lembaga Pendidikan:
           </label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {(["RA", "MI", "MTs", "MA"] as JenjangType[]).map((j) => {
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {(["MI"] as JenjangType[]).map((j) => {
               const active = state.jenjang === j;
               return (
                 <button
                   key={j}
                   type="button"
                   onClick={() => handleJenjangChange(j)}
-                  className={`py-3 px-4 rounded-xl border font-bold text-sm transition-all text-center flex flex-col items-center justify-center gap-1 cursor-pointer ${
-                    active
-                      ? "bg-emerald-600 border-emerald-600 text-white shadow-sm shadow-emerald-600/10"
-                      : "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 text-zinc-700 dark:text-zinc-350"
-                  }`}
+                  className="py-3 px-4 rounded-xl border bg-emerald-600 border-emerald-600 text-white shadow-sm shadow-emerald-600/10 font-bold text-sm transition-all text-center flex flex-col items-center justify-center gap-1 cursor-pointer"
                 >
                   <span className="text-base">{j}</span>
                   <span className="text-[10px] opacity-75 font-normal">
-                    {j === "RA" ? "Raudhatul Athfal" : j === "MI" ? "Madrasah Ibtidaiyah" : j === "MTs" ? "Madrasah Tsanawiyah" : "Madrasah Aliyah"}
+                    Madrasah Ibtidaiyah (Fokus Tingkat)
                   </span>
                 </button>
               );
@@ -251,14 +247,7 @@ export default function Step2Form({ state, onChange, onPrev, onNext }: Step2Form
               <Heart className="w-5 h-5 text-rose-500 fill-rose-500 animate-pulse" />
               Integrasi Nilai Kurikulum Berbasis Cinta (KBC): *
             </label>
-            <a
-              href="https://drive.google.com/file/d/1vloszu3HP8Sr50lFmBdDMYndJcLCA8bg/view?usp=sharing"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-zinc-50 border border-emerald-200 dark:bg-zinc-900 dark:hover:bg-zinc-850 text-emerald-700 dark:text-emerald-350 font-bold text-[10px] rounded-lg shadow-xs transition-colors"
-            >
-              <span>Buku Panduan KBC Kemenag (PDF) ↗</span>
-            </a>
+
           </div>
           <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mb-4">
             Centang nilai-nilai KBC Kemenag di bawah ini guna diinsersikan secara cerdas ke dalam format TP (Tujuan Pembelajaran), ATP, dan deskripsi KKTP sesuai ketentuan acuan berpikir panduan resmi.
@@ -302,47 +291,7 @@ export default function Step2Form({ state, onChange, onPrev, onNext }: Step2Form
           Volume Beban Pembelajaran Tahunan
         </h3>
 
-        {/* Kurikulum KMA 1503 / 450 Struktur JP Presets */}
-        <div className="mb-6 p-4 bg-emerald-50/30 dark:bg-emerald-950/10 border border-emerald-100/60 dark:border-emerald-800/20 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="space-y-1">
-            <span className="text-[10px] uppercase font-extrabold tracking-wider text-emerald-800 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 px-22 py-0.5 rounded-md">
-              Struktur JP Madrasah KMA 1503 / 450
-            </span>
-            <p className="text-xs text-zinc-650 dark:text-zinc-300">
-              Sistem telah mendeteksi otomatis beban JP standar: <strong>{state.selectedSubject === "quran_hadis" || state.selectedSubject === "akidah_akhlak" || state.selectedSubject === "fikih" || state.selectedSubject === "ski" || state.selectedSubject === "bahasa_arab" || state.selectedSubject === "nilai_agama" ? "PAI/Agama: 2 JP" : "Umum: 4 JP"}</strong>. Pilih preset atau atur manual di bawah.
-            </p>
-          </div>
-          <div className="flex gap-2 self-start sm:self-center">
-            <button
-              type="button"
-              onClick={() => {
-                const nextChapters = state.chapters.map(ch => ({ ...ch, jp: 2 }));
-                onChange({ jpPerWeek: 2, chapters: nextChapters });
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
-                state.jpPerWeek === 2
-                  ? "bg-emerald-600 border-emerald-600 text-white"
-                  : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50"
-              }`}
-            >
-              Set 2 JP (Struktur PAI Kemenag)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                const nextChapters = state.chapters.map(ch => ({ ...ch, jp: 4 }));
-                onChange({ jpPerWeek: 4, chapters: nextChapters });
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
-                state.jpPerWeek === 4
-                  ? "bg-emerald-600 border-emerald-600 text-white"
-                  : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50"
-              }`}
-            >
-              Set 4 JP (Struktur Umum)
-            </button>
-          </div>
-        </div>
+
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* JP per Week */}

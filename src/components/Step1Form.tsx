@@ -70,6 +70,23 @@ export default function Step1Form({ identity, onChange, onNext }: Step1FormProps
             />
           </div>
 
+          {/* Academic Year */}
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-emerald-500" />
+              Tahun Pelajaran
+            </label>
+            <select
+              value={identity.academicYear}
+              onChange={(e) => handleFieldChange("academicYear", e.target.value)}
+              className="w-full px-4 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm text-zinc-900 dark:text-zinc-100"
+            >
+              <option value="2025/2026">2025/2026</option>
+              <option value="2026/2027">2026/2027</option>
+              <option value="2024/2025">2024/2025</option>
+            </select>
+          </div>
+
           {/* Teacher Name */}
           <div className="space-y-2">
             <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
@@ -88,7 +105,7 @@ export default function Step1Form({ identity, onChange, onNext }: Step1FormProps
 
           {/* Teacher NIP */}
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+            <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-305 flex items-center gap-2">
               <Hash className="w-4 h-4 text-emerald-500" />
               NIP / NUPTK / PegID
             </label>
@@ -99,23 +116,6 @@ export default function Step1Form({ identity, onChange, onNext }: Step1FormProps
               onChange={(e) => handleFieldChange("nipCode", e.target.value)}
               className="w-full px-4 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
             />
-          </div>
-
-          {/* Academic Year */}
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-emerald-500" />
-              Tahun Pelajaran
-            </label>
-            <select
-              value={identity.academicYear}
-              onChange={(e) => handleFieldChange("academicYear", e.target.value)}
-              className="w-full px-4 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm text-zinc-900 dark:text-zinc-100"
-            >
-              <option value="2025/2026">2025/2026 (Aktif - Regulasi BSKAP 2025)</option>
-              <option value="2026/2027">2026/2027</option>
-              <option value="2024/2025">2024/2025</option>
-            </select>
           </div>
 
           {/* Semester */}

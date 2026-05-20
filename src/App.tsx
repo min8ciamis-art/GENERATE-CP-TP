@@ -124,16 +124,6 @@ export default function App() {
             >
               {darkMode ? <Sun className="w-4 h-4 text-emerald-500" /> : <Moon className="w-4 h-4 text-zinc-700" />}
             </button>
-            
-            <a
-              href="https://kemenag.go.id"
-              target="_blank"
-              rel="noreferrer"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 border border-emerald-500/20 text-emerald-600 rounded-lg text-xs font-bold bg-emerald-50/10 hover:bg-emerald-50/20"
-            >
-              <GraduationCap className="w-3.5 h-3.5" />
-              Portal Kemenag
-            </a>
           </div>
         </div>
       </header>
