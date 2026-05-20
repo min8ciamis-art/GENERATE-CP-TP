@@ -506,7 +506,7 @@ export function generateAlokasiHtml(state: GeneratorState): string {
 
 // Master Export Function that combines all tabs into a single exportable .doc/docx Word file
 export function exportCompleteDocumentToDoc(state: GeneratorState): void {
-  const cpList = getCpElements(state.jenjang, state.selectedGrade, state.selectedSubject);
+  const cpList = state.customCps || getCpElements(state.jenjang, state.selectedGrade, state.selectedSubject);
   
   const cpContent = generateCpHtml(state, cpList);
   const tpContent = generateTpHtml(state, cpList);

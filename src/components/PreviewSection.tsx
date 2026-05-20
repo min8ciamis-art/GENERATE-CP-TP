@@ -7,11 +7,12 @@ import React, { useState } from "react";
 import { GeneratorState, CpElement, KbcValue } from "../types";
 import { KBC_VALUES, getCpElements, getGrades, getSubjects } from "../data/curriculumData";
 import { exportCompleteDocumentToDoc, exportIndividualDocToDoc } from "../utils/docxExporter";
-import { ArrowLeft, Download, FileText, Calendar, Table, CheckSquare, BarChart, RefreshCw } from "lucide-react";
+import { ArrowLeft, Download, FileText, Calendar, Table, CheckSquare, BarChart, RefreshCw, Plus, Trash2, Edit } from "lucide-react";
 import { motion } from "motion/react";
 
 interface PreviewSectionProps {
   state: GeneratorState;
+  onChange?: (updated: Partial<GeneratorState>) => void;
   onReset: () => void;
 }
 
@@ -34,7 +35,7 @@ const MONTHS_S2 = [
   { name: "Juni", weeks: 4 }
 ];
 
-export default function PreviewSection({ state, onReset }: PreviewSectionProps) {
+export default function PreviewSection({ state, onChange, onReset }: PreviewSectionProps) {
   const [activeTab, setActiveTab] = useState<"cp" | "tp" | "atp" | "protoprom" | "kktp" | "alokasi">("cp");
   const [promesSem, setPromesSem] = useState<1 | 2>(1);
 
@@ -46,8 +47,71 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
   const currentSubjectObj = subjects.find(s => s.id === state.selectedSubject);
   const isAgama = currentSubjectObj ? currentSubjectObj.category === "PAI/Bahasa Arab" : false;
 
-  const cpList = getCpElements(state.jenjang, state.selectedGrade, state.selectedSubject);
+  const cpList = state.customCps || getCpElements(state.jenjang, state.selectedGrade, state.selectedSubject);
   const selectedKbc = KBC_VALUES.filter(k => state.selectedKbcValues.includes(k.id));
+
+  // State variables for Capaian Pembelajaran inline editing
+  const [editingCpIdx, setEditingCpIdx] = useState<number | null>(null);
+  const [tempCpElement, setTempCpElement] = useState("");
+  const [tempCpDescription, setTempCpDescription] = useState("");
+
+  const handleStartEditCp = (idx: number, cp: CpElement) => {
+    setEditingCpIdx(idx);
+    setTempCpElement(cp.element);
+    setTempCpDescription(cp.description);
+  };
+
+  const handleSaveCp = (idx: number) => {
+    if (!onChange) return;
+    const currentList = [...cpList];
+    currentList[idx] = {
+      element: tempCpElement,
+      description: tempCpDescription
+    };
+    onChange({ customCps: currentList });
+    setEditingCpIdx(null);
+  };
+
+  const handleDeleteCp = (idx: number) => {
+    if (!onChange) return;
+    const confirmDelete = window.confirm("Apakah Anda yakin ingin menghapus elemen Capaian Pembelajaran ini?");
+    if (confirmDelete) {
+      const currentList = cpList.filter((_, i) => i !== idx);
+      onChange({ customCps: currentList });
+      if (editingCpIdx === idx) {
+        setEditingCpIdx(null);
+      }
+    }
+  };
+
+  const handleAddCp = () => {
+    if (!onChange) return;
+    const currentList = [...cpList];
+    const newCp: CpElement = {
+      element: "Pemahaman Konsep - Elemen Baru",
+      description: "Menerapkan dan menguraikan kompetensi pokok keagamaan/umum dalam membaca dan memahami kajian relevan."
+    };
+    const nextList = [...currentList, newCp];
+    onChange({ customCps: nextList });
+    
+    // Auto-focus edit on newly added element
+    setEditingCpIdx(nextList.length - 1);
+    setTempCpElement(newCp.element);
+    setTempCpDescription(newCp.description);
+  };
+
+  const handleResetCps = () => {
+    if (!onChange) return;
+    const confirmReset = window.confirm(
+      "Apakah Anda yakin ingin memulihkan seluruh Elemen CP ke standar asli regulasi resmi SK Dirjen Pendis No. 9941 / 2025 (Agama) / BSKAP? Semua kustomisasi Anda untuk mata pelajaran ini akan disetel ulang."
+    );
+    if (confirmReset) {
+      onChange({
+        customCps: getCpElements(state.jenjang, state.selectedGrade, state.selectedSubject)
+      });
+      setEditingCpIdx(null);
+    }
+  };
 
   // Totals calculated dynamically
   const totalWeeks = state.chapters.reduce((acc, c) => acc + c.weeks, 0);
@@ -118,7 +182,7 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
         <div className="py-6 px-6 max-h-[500px] overflow-y-auto">
           {activeTab === "cp" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 text-zinc-800 dark:text-zinc-150">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-200 dark:border-zinc-808">
                 <div>
                   <h3 className="text-base font-extrabold text-zinc-900 dark:text-zinc-50 flex items-center gap-1.5">
                     Capaian Pembelajaran (CP) Elemen - Regulasi Resmi
@@ -127,6 +191,27 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
                     Pemetaan elemen dan uraian capaian pembelajaran mata pelajaran <strong>{subjectLabel}</strong> tingkat <strong>{gradeLabel}</strong> sesuai acuan kurikulum nasional.
                   </p>
                 </div>
+                {onChange && (
+                  <div className="flex items-center gap-2 self-start sm:self-center flex-wrap">
+                    <button
+                      type="button"
+                      onClick={handleAddCp}
+                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-xs"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      + Tambah Elemen
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleResetCps}
+                      className="px-3 py-1.5 bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-750 text-zinc-700 dark:text-zinc-300 font-bold text-xs rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
+                      title="Pulihkan seluruh elemen ke setelan regulasi resmi"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      Reset Standar
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Dual-Regulation Interactive References Summary Grid */}
@@ -134,7 +219,7 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
                 {/* General Curriculum Referencing */}
                 <div className={`p-4 rounded-[18px] border transition-all ${!isAgama ? "bg-emerald-50/30 border-emerald-300 dark:bg-emerald-950/20 dark:border-emerald-800/40" : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800/80"}`}>
                   <div className="flex justify-between items-start">
-                    <span className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md ${!isAgama ? "bg-emerald-600 text-white" : "bg-zinc-100 dark:bg-zinc-850 text-zinc-500"}`}>
+                    <span className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md ${!isAgama ? "bg-emerald-600 text-white" : "bg-zinc-100 dark:bg-zinc-855 text-zinc-500"}`}>
                       {!isAgama ? "Aktif Digunakan (Mapel Umum)" : "Acuan Mapel Umum"}
                     </span>
                   </div>
@@ -155,7 +240,7 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
                 {/* Islamic / Religious PAI Curriculum Referencing */}
                 <div className={`p-4 rounded-[18px] border transition-all ${isAgama ? "bg-emerald-50/30 border-emerald-300 dark:bg-emerald-950/20 dark:border-emerald-800/40" : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800/50"}`}>
                   <div className="flex justify-between items-start">
-                    <span className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md ${isAgama ? "bg-emerald-600 text-white" : "bg-zinc-100 dark:bg-zinc-850 text-zinc-500"}`}>
+                    <span className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md ${isAgama ? "bg-emerald-600 text-white" : "bg-zinc-100 dark:bg-zinc-855 text-zinc-500"}`}>
                       {isAgama ? "Aktif Digunakan (Khas Agama)" : "Acuan Mapel Agama"}
                     </span>
                   </div>
@@ -175,7 +260,7 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
               </div>
 
               {/* Table CP List elements */}
-              <div className="overflow-x-auto rounded-xl border border-zinc-150 dark:border-zinc-800 shadow-xs">
+              <div className="overflow-x-auto rounded-xl border border-zinc-150 dark:border-zinc-808 shadow-xs">
                 <table className="w-full text-xs text-left">
                   <thead>
                     <tr className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 font-bold">
@@ -193,30 +278,98 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
                           </a>
                         </div>
                       </th>
+                      {onChange && <th className="p-3 w-28 text-center bg-zinc-50 dark:bg-zinc-950">Aksi</th>}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-                    {cpList.map((cp, idx) => (
-                      <tr key={idx} className="hover:bg-zinc-50/20 dark:hover:bg-zinc-950/10">
-                        <td className="p-3 font-bold text-zinc-900 dark:text-white">{cp.element}</td>
-                        <td className="p-3 leading-relaxed text-zinc-650 dark:text-zinc-400">
-                          <div>{cp.description}</div>
-                          <div className="mt-2 flex items-center gap-1.5 flex-wrap">
-                            <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 bg-zinc-100 text-zinc-500 dark:bg-zinc-805 dark:text-zinc-400 rounded">
-                              {isAgama ? "Sumber: SK Dirjen Pendis 9941/2025" : "Sumber: SK BSKAP 032/H/KR/2024"}
-                            </span>
-                            <a
-                              href={isAgama ? "https://drive.google.com/file/d/11vPVH7-e2yBODBTO4ioiBLXuOAkvlj2D/view?usp=sharing" : "https://drive.google.com/file/d/1r4zWBbhP8Lo3fG30m9htzBbVvHi9qjzW/view?usp=sharing"}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-[9px] text-emerald-700 dark:text-emerald-450 hover:underline font-bold"
-                            >
-                              Verifikasi Standar CP ↗
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                  <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800 bg-white dark:bg-zinc-900">
+                    {cpList.map((cp, idx) => {
+                      const isEditing = editingCpIdx === idx;
+                      return (
+                        <tr key={idx} className="hover:bg-zinc-50/20 dark:hover:bg-zinc-950/10">
+                          <td className="p-3 align-top font-bold text-zinc-900 dark:text-white">
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                value={tempCpElement}
+                                onChange={(e) => setTempCpElement(e.target.value)}
+                                className="w-full px-2 py-1.5 text-xs font-bold bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-900 dark:text-zinc-100"
+                              />
+                            ) : (
+                              cp.element
+                            )}
+                          </td>
+                          <td className="p-3 leading-relaxed text-zinc-650 dark:text-zinc-400">
+                            {isEditing ? (
+                              <textarea
+                                value={tempCpDescription}
+                                onChange={(e) => setTempCpDescription(e.target.value)}
+                                rows={5}
+                                className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 leading-relaxed font-normal text-zinc-900 dark:text-zinc-100"
+                              />
+                            ) : (
+                              <div>{cp.description}</div>
+                            )}
+                            
+                            {!isEditing && (
+                              <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+                                <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 bg-zinc-100 text-zinc-500 dark:bg-zinc-805 dark:text-zinc-400 rounded">
+                                  {isAgama ? "Sumber: SK Dirjen Pendis 9941/2025" : "Sumber: SK BSKAP 032/H/KR/2024"}
+                                </span>
+                                <a
+                                  href={isAgama ? "https://drive.google.com/file/d/11vPVH7-e2yBODBTO4ioiBLXuOAkvlj2D/view?usp=sharing" : "https://drive.google.com/file/d/1r4zWBbhP8Lo3fG30m9htzBbVvHi9qjzW/view?usp=sharing"}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[9px] text-emerald-700 dark:text-emerald-450 hover:underline font-bold"
+                                >
+                                  Verifikasi Standar CP ↗
+                                </a>
+                              </div>
+                            )}
+                          </td>
+                          {onChange && (
+                            <td className="p-3 text-center align-top whitespace-nowrap">
+                              {isEditing ? (
+                                <div className="flex flex-col gap-1.5 justify-center">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSaveCp(idx)}
+                                    className="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-semibold rounded-md cursor-pointer flex items-center justify-center gap-1"
+                                  >
+                                    Simpan
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditingCpIdx(null)}
+                                    className="px-2 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-650 dark:bg-zinc-800 dark:text-zinc-300 text-[10px] font-semibold rounded-md cursor-pointer"
+                                  >
+                                    Batal
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="flex flex-col gap-1.5 justify-center">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleStartEditCp(idx, cp)}
+                                    className="px-2.5 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-350 dark:hover:bg-emerald-950/70 text-[10px] font-semibold rounded-lg cursor-pointer transition-all flex items-center justify-center gap-1"
+                                  >
+                                    <Edit className="w-3 h-3" />
+                                    Edit
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteCp(idx)}
+                                    className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400 dark:hover:bg-rose-950/40 text-[10px] font-semibold rounded-lg cursor-pointer transition-all flex items-center justify-center gap-1"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                    Hapus
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          )}
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

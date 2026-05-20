@@ -59,6 +59,7 @@ export interface GeneratorState {
   tpPerChapter: number;
   sumatifJpPerChapter: number;
   chapters: Chapter[];
+  customCps?: CpElement[];
 }
 
 export interface CpElement {

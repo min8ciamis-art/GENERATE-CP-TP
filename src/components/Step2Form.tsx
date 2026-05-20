@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState } from "react";
 import { GeneratorState, JenjangType, Chapter, KbcValue } from "../types";
-import { KBC_VALUES, getGrades, getSubjects, getDefaultChapters } from "../data/curriculumData";
+import { KBC_VALUES, getGrades, getSubjects, getDefaultChapters, getCpElements } from "../data/curriculumData";
 import { Layers, CheckCircle2, Heart, Plus, Trash2, ArrowLeft, ArrowRight, BookOpen, Clock, CalendarDays, HelpCircle } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -26,25 +26,58 @@ export default function Step2Form({ state, onChange, onPrev, onNext }: Step2Form
     const nextSubjects = getSubjects(newJenjang);
     const defaultGrade = nextGrades[0]?.id || "";
     const defaultSubject = nextSubjects[0]?.id || "";
-    const nextChapters = getDefaultChapters(newJenjang, defaultGrade, defaultSubject);
+
+    const selectedSubObj = nextSubjects.find(s => s.id === defaultSubject);
+    const isAgama = selectedSubObj ? selectedSubObj.category === "PAI/Bahasa Arab" : false;
+    let newJp = 4;
+    if (newJenjang === "RA") {
+      newJp = 8;
+    } else if (isAgama) {
+      newJp = 2; // Default mapel agama is 2 JP/week
+    } else {
+      newJp = 4; // Default mapel umum is 4 JP/week
+    }
+
+    const nextChapters = getDefaultChapters(newJenjang, defaultGrade, defaultSubject).map((ch) => ({
+      ...ch,
+      jp: newJp
+    }));
 
     onChange({
       jenjang: newJenjang,
       selectedGrade: defaultGrade,
       selectedSubject: defaultSubject,
       chapters: nextChapters,
-      // Default RA typical schedules
-      jpPerWeek: newJenjang === "RA" ? 8 : (newJenjang === "MI" ? 4 : 4),
+      customCps: getCpElements(newJenjang, defaultGrade, defaultSubject),
+      jpPerWeek: newJp,
       effectiveWeeks: 18
     });
   };
 
   // Monitor Subject changes to refresh chapters
   const handleSubjectChange = (newSubject: string) => {
-    const nextChapters = getDefaultChapters(state.jenjang, state.selectedGrade, newSubject);
+    const subjects = getSubjects(state.jenjang);
+    const selectedSubObj = subjects.find(s => s.id === newSubject);
+    const isAgama = selectedSubObj ? selectedSubObj.category === "PAI/Bahasa Arab" : false;
+    let newJp = 4;
+    if (state.jenjang === "RA") {
+      newJp = 8;
+    } else if (isAgama) {
+      newJp = 2; // Default mapel agama is 2 JP/week
+    } else {
+      newJp = 4; // Default mapel umum is 4 JP/week
+    }
+
+    const nextChapters = getDefaultChapters(state.jenjang, state.selectedGrade, newSubject).map((ch) => ({
+      ...ch,
+      jp: newJp
+    }));
+
     onChange({
       selectedSubject: newSubject,
-      chapters: nextChapters
+      chapters: nextChapters,
+      jpPerWeek: newJp,
+      customCps: getCpElements(state.jenjang, state.selectedGrade, newSubject)
     });
   };
 
@@ -169,7 +202,10 @@ export default function Step2Form({ state, onChange, onPrev, onNext }: Step2Form
             </label>
             <select
               value={state.selectedGrade}
-              onChange={(e) => onChange({ selectedGrade: e.target.value })}
+              onChange={(e) => onChange({
+                selectedGrade: e.target.value,
+                customCps: getCpElements(state.jenjang, e.target.value, state.selectedSubject)
+              })}
               className="w-full px-4 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm text-zinc-900 dark:text-zinc-100"
             >
               {grades.map((g) => (
@@ -266,6 +302,48 @@ export default function Step2Form({ state, onChange, onPrev, onNext }: Step2Form
           Volume Beban Pembelajaran Tahunan
         </h3>
 
+        {/* Kurikulum KMA 1503 / 450 Struktur JP Presets */}
+        <div className="mb-6 p-4 bg-emerald-50/30 dark:bg-emerald-950/10 border border-emerald-100/60 dark:border-emerald-800/20 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-1">
+            <span className="text-[10px] uppercase font-extrabold tracking-wider text-emerald-800 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 px-22 py-0.5 rounded-md">
+              Struktur JP Madrasah KMA 1503 / 450
+            </span>
+            <p className="text-xs text-zinc-650 dark:text-zinc-300">
+              Sistem telah mendeteksi otomatis beban JP standar: <strong>{state.selectedSubject === "quran_hadis" || state.selectedSubject === "akidah_akhlak" || state.selectedSubject === "fikih" || state.selectedSubject === "ski" || state.selectedSubject === "bahasa_arab" || state.selectedSubject === "nilai_agama" ? "PAI/Agama: 2 JP" : "Umum: 4 JP"}</strong>. Pilih preset atau atur manual di bawah.
+            </p>
+          </div>
+          <div className="flex gap-2 self-start sm:self-center">
+            <button
+              type="button"
+              onClick={() => {
+                const nextChapters = state.chapters.map(ch => ({ ...ch, jp: 2 }));
+                onChange({ jpPerWeek: 2, chapters: nextChapters });
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                state.jpPerWeek === 2
+                  ? "bg-emerald-600 border-emerald-600 text-white"
+                  : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50"
+              }`}
+            >
+              Set 2 JP (Struktur PAI Kemenag)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const nextChapters = state.chapters.map(ch => ({ ...ch, jp: 4 }));
+                onChange({ jpPerWeek: 4, chapters: nextChapters });
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                state.jpPerWeek === 4
+                  ? "bg-emerald-600 border-emerald-600 text-white"
+                  : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50"
+              }`}
+            >
+              Set 4 JP (Struktur Umum)
+            </button>
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* JP per Week */}
           <div className="space-y-2">
@@ -277,7 +355,11 @@ export default function Step2Form({ state, onChange, onPrev, onNext }: Step2Form
               min={1}
               max={12}
               value={state.jpPerWeek}
-              onChange={(e) => onChange({ jpPerWeek: parseInt(e.target.value) || 2 })}
+              onChange={(e) => {
+                const val = parseInt(e.target.value) || 2;
+                const nextChapters = state.chapters.map(ch => ({ ...ch, jp: val }));
+                onChange({ jpPerWeek: val, chapters: nextChapters });
+              }}
               className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm font-bold focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>

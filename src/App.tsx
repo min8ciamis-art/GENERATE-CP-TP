@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from "react";
 import { GeneratorState } from "./types";
-import { getDefaultChapters } from "./data/curriculumData";
+import { getDefaultChapters, getCpElements } from "./data/curriculumData";
 import Step1Form from "./components/Step1Form";
 import Step2Form from "./components/Step2Form";
 import Step3Review from "./components/Step3Review";
@@ -35,7 +35,8 @@ const DEFAULT_STATE: GeneratorState = {
   effectiveWeeks: 18,
   tpPerChapter: 2,
   sumatifJpPerChapter: 2,
-  chapters: getDefaultChapters("MI", "mi_3", "quran_hadis")
+  chapters: getDefaultChapters("MI", "mi_3", "quran_hadis"),
+  customCps: getCpElements("MI", "mi_3", "quran_hadis")
 };
 
 export default function App() {
@@ -96,7 +97,7 @@ export default function App() {
   }, [darkMode]);
 
   return (
-    <div className={`min-h-screen bg-slate-50 dark:bg-zinc-950 font-sans transition-colors duration-200`}>
+    <div className={`min-h-screen bg-slate-50 dark:bg-zinc-950 font-sans transition-colors duration-200 pb-20`}>
       {/* 1. Header (Top Navigation) */}
       <header className="sticky top-0 z-40 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -210,23 +211,15 @@ export default function App() {
         )}
 
         {step === 4 && (
-          <PreviewSection state={state} onReset={() => setStep(1)} />
+          <PreviewSection state={state} onChange={handleStateChange} onReset={() => setStep(1)} />
         )}
       </main>
 
       {/* 4. Footer */}
-      <footer className="bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 py-10 text-center text-xs text-zinc-500 dark:text-zinc-400">
-        <div className="max-w-7xl mx-auto px-4 space-y-3">
-          <p className="font-semibold text-zinc-700 dark:text-zinc-350">
-            EduGen Pro — Generator Perangkat Ajar Kurikulum Merdeka PAI Terintegrasi KBC Kemenag & Regulasi BSKAP 2025
-          </p>
-          <div className="flex items-center justify-center gap-1">
-            <span>Didesain khusus untuk para asatidz dan pendidik madrasah di Indonesia dengan</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 animate-pulse inline" />
-            <span>untuk kemajuan umat.</span>
-          </div>
-          <p className="text-[10px] text-zinc-400">
-            Kementerian Agama Republik Indonesia © 2026. Seluruh hak cipta terlindungi.
+      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md border-t border-zinc-200 dark:border-zinc-900 py-3.5 text-center text-xs text-zinc-500 dark:text-zinc-400 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+        <div className="max-w-7xl mx-auto px-4">
+          <p className="font-extrabold text-sm text-emerald-800 dark:text-emerald-400 tracking-widest">
+            MUHAMMAD IMAM SYAFI'I @ 2026
           </p>
         </div>
       </footer>
