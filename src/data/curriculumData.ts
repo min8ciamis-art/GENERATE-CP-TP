@@ -7,39 +7,39 @@ import { JenjangType, KbcValue, Subject, Grade, Chapter, CpElement } from "../ty
 
 export const KBC_VALUES: KbcValue[] = [
   {
-    id: "rahmah",
-    name: "Kasih Sayang (Rahmah)",
-    arabicName: "الرَّحْمَة",
-    description: "Internalisasi rasa cinta kasih, empati mendalam, dan kelembutan serta kelapangan dada dalam interaksi belajar mengajar tanpa kekerasan.",
-    exampleIntegration: "Mengawali dan mengakhiri pembelajaran dengan saling mendoakan, menghargai kelemahan kognitif siswa dengan bimbingan personal yang penuh kehangatan."
+    id: "cinta_allah_rasul",
+    name: "Cinta Allah & Rasul",
+    arabicName: "حُبّ اللهِ وَرَسُوْلِهِ",
+    description: "Membiasakan rasa syukur, menjalankan syariat dengan ikhlas, meneladani akhlak suci Nabi Muhammad SAW, serta menghidupkan kecintaan beribadah.",
+    exampleIntegration: "Mengawali pembelajaran dengan doa bersama, menanamkan kesadaran ketauhidan melalui tadabbur ayat Al-Qur'an, serta membiasakan keteladanan akhlak mulia."
   },
   {
-    id: "kepedulian",
-    name: "Kepedulian (Inayah)",
-    arabicName: "العِنَايَة",
-    description: "Kepekaan sosial yang tinggi untuk menolong sesama teman, tanggap terhadap kesulitan belajar rekan sebaya, dan cinta lingkungan madrasah.",
-    exampleIntegration: "Metode tutor sebaya (peer tutoring) dan membiasakan siswa memberikan sumbangan pemikiran serta bantuan sosial nyata."
+    id: "cinta_ilmu",
+    name: "Cinta Ilmu",
+    arabicName: "حُبّ العِلْمِ",
+    description: "Menumbuhkan gairah belajar seumur hidup (long-life learning), keingintahuan yang tinggi, ketekunan akademis, serta tekad mengamalkan ilmu demi kemaslahatan.",
+    exampleIntegration: "Mengajukan pertanyaan pemantik kritis, mengkaji kebenaran ilmiah dengan jujur, serta melatih keterampilan problem solving terstruktur."
   },
   {
-    id: "kesantunan",
-    name: "Kesantunan (Ta'adub)",
-    arabicName: "التَّأَدُّب",
-    description: "Sikap beradab tinggi, menggunakan tutur kata yang baik (QAulan Karima), menghormati guru, orang tua, dan menghargai teman sejawat.",
-    exampleIntegration: "Praktik berkomunikasi formal, teknik menyanggah pendapat secara akademis namun tetap menjunjung adab islami yang luhur."
+    id: "cinta_diri_sesama",
+    name: "Cinta Diri & Sesama",
+    arabicName: "حُبّ الذَّاتِ وَالآخَرِيْن",
+    description: "Mengembangkan rasa empati yang tulus, melatih tutur kata asertif yang sopan, menghargai diri dan antarsesama siswa, serta menjauhi segala bentuk perundungan (bullying).",
+    exampleIntegration: "Membiasakan metode tutor sebaya (peer tutoring), saling berbagi tanpa pamrih, serta menerapkan teknik penyelesaian konflik yang damai."
   },
   {
-    id: "kedamaian",
-    name: "Kedamaian (As-Salam)",
-    arabicName: "السَّلَام",
-    description: "Pencegahan konflik, menjauhi perundungan (bullying) verbal maupun fisik, serta menghadirkan ketenangan dalam proses pembelajaran.",
-    exampleIntegration: "Membangun kesepakatan kelas yang antidiskriminasi, serta latihan refleksi diri untuk meredakan ketegangan emosional."
+    id: "cinta_lingkungan",
+    name: "Cinta Lingkungan",
+    arabicName: "حُبّ البِيْئَةِ",
+    description: "Merawat kebersihan jasmani dan rohani, melestarikan keharmonisan flora & fauna ciptaan Allah, serta memelihara sarana prasarana penunjang kelas.",
+    exampleIntegration: "Membiasakan piket kebersihan kelas secara proaktif, menghemat pemakaian listrik/air di madrasah, serta melakukan penghijauan secara berkala."
   },
   {
-    id: "moderasi",
-    name: "Moderasi Beragama (Tawasut)",
-    arabicName: "التَّوَسُّط",
-    description: "Sikap tawasut (moderat), tawazun (seimbang), i'tidal (adil), dan tasamuh (toleran) dalam beragama dan berbangsa di tengah keberagaman.",
-    exampleIntegration: "Diskusi bertema kerukunan, mengkaji materi keagamaan dengan pendekatan komparasi yang bijak, serta melatih inklusivitas sosial."
+    id: "cinta_tanah_air",
+    name: "Cinta Tanah Air",
+    arabicName: "حُبّ الوَطَنِ",
+    description: "Menjunjung tinggi budaya gotong-royong, toleransi (tasamuh) antarsuku/agama, ketaatan hukum, serta bangga terhadap khazanah keindonesiaan di ranah global.",
+    exampleIntegration: "Mengintegrasikan muatan lokal kepahlawanan, melatih musyawarah mufakat, serta memupuk moderasi beragama dalam kehidupan sehari-hari."
   }
 ];
 
@@ -132,8 +132,15 @@ export function getCpElements(jenjang: JenjangType, gradeId: string, subjectId: 
   switch (subjectId) {
     case "quran_hadis":
       return [
-        { element: "Al-Qur'an", description: "Peserta didik mampu melafalkan, menghafal, menganalisis, serta mengomunikasikan kandungan ayat Al-Qur'an secara kontekstual dengan didasari rasa cinta kepada wahyu Ilahi." },
-        { element: "Hadis", description: "Peserta didik mampu memahami dan meneladani perilaku Rasulullah SAW yang didokumentasikan dalam hadis-hadis sahih tentang pembinaan akhlak mulia dan kasih sayang universal (rahmatan lil alamin)." }
+        { element: "Pemahaman Konsep - Tajwid", description: "Menerapkan hukum bacaan mim sukun, waqaf wasal, dan hukum ra’ tafkhim dan tarqiq, jawazul wajhain dalam praktik membaca Al-Qur’an dengan baik dan benar" },
+        { element: "Pemahaman Konsep - Al-Qur’an", description: "Menghafal dan menulis ayat/surah dalam Al-Qur’an tentang ciri-ciri orang munafik, menyayangi anak yatim, keutamaan memberi, amal saleh; menjelaskan arti dan isi kandungannya agar dapat menerapkan dalam kehidupan sehari-hari" },
+        { element: "Pemahaman Konsep - Hadis", description: "Menghafal dan menulis hadis tentang ciri-ciri orang munafik, menyayangi anak yatim, keutamaan memberi, dan amal saleh; menjelaskan arti dan isi kandungannya agar dapat menerapkan dalam kehidupan sehari-hari" },
+        { element: "Keterampilan Proses - Mengamati", description: "Murid mengamati fenomena, fakta dan peristiwa secara sederhana yang relevan dengan Al-Qur’an dan Hadis; mengidentifikasi dan mengklasifikasikan, kemudian mencatat hasil pengamatan dan mencari sisi persamaan atau perbedaan." },
+        { element: "Keterampilan Proses - Mempertanyakan & Memprediksi", description: "Dengan bantuan guru, murid membuat pertanyaan ilmiah yang mengarah pada konten yang disajikan serta memprediksi jawaban" },
+        { element: "Keterampilan Proses - Merencanakan & Melakukan Penyelidikan", description: "Dengan bantuan guru, murid melakukan langkah-langkah kongkrit dalam menemukan jawaban yang diajukan melalui observasi dan penyelidikan." },
+        { element: "Keterampilan Proses - Memproses & Menganalisis Data", description: "Dengan bantuan guru, murid mengolah data dan informasi yang diperoleh dalam bentuk gambar atau diagram, kemudian membandingkan antara hasil dan prediksi dengan penjelasan yang memadai." },
+        { element: "Keterampilan Proses - Mengevaluasi & Merefleksi", description: "Murid melakukan evaluasi terhadap proses-proses yang telah dilalui maupun hasil yang didapatkan" },
+        { element: "Keterampilan Proses - Mengomunikasikan Hasil", description: "Murid menyajikan hasil baik secara lisan maupun tulisan melalui berbagai media." }
       ];
     case "akidah_akhlak":
       return [

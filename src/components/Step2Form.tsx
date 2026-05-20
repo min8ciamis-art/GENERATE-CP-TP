@@ -210,12 +210,22 @@ export default function Step2Form({ state, onChange, onPrev, onNext }: Step2Form
 
         {/* 3. KBC Core Values - Interactive Tiles */}
         <div className="border border-zinc-100 dark:border-zinc-800 rounded-xl p-4 bg-emerald-50/20 dark:bg-emerald-950/5">
-          <label className="text-sm font-bold text-emerald-850 dark:text-emerald-450 flex items-center gap-2 mb-3">
-            <Heart className="w-5 h-5 text-rose-500 fill-rose-500 animate-pulse" />
-            Integrasi Nilai Kurikulum Berbasis Cinta (KBC): *
-          </label>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pb-3 border-b border-zinc-100/60 dark:border-zinc-850">
+            <label className="text-sm font-bold text-emerald-850 dark:text-emerald-450 flex items-center gap-2">
+              <Heart className="w-5 h-5 text-rose-500 fill-rose-500 animate-pulse" />
+              Integrasi Nilai Kurikulum Berbasis Cinta (KBC): *
+            </label>
+            <a
+              href="https://drive.google.com/file/d/1vloszu3HP8Sr50lFmBdDMYndJcLCA8bg/view?usp=sharing"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-zinc-50 border border-emerald-200 dark:bg-zinc-900 dark:hover:bg-zinc-850 text-emerald-700 dark:text-emerald-350 font-bold text-[10px] rounded-lg shadow-xs transition-colors"
+            >
+              <span>Buku Panduan KBC Kemenag (PDF) ↗</span>
+            </a>
+          </div>
           <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mb-4">
-            Centang nilai-nilai KBC Kemenag di bawah ini guna diinsersikan secara cerdas ke dalam format TP (Tujuan Pembelajaran), ATP, dan deskripsi KKTP.
+            Centang nilai-nilai KBC Kemenag di bawah ini guna diinsersikan secara cerdas ke dalam format TP (Tujuan Pembelajaran), ATP, dan deskripsi KKTP sesuai ketentuan acuan berpikir panduan resmi.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

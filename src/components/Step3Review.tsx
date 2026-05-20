@@ -114,7 +114,7 @@ export default function Step3Review({ state, onEdit, onGenerate }: Step3ReviewPr
                 </tr>
                 <tr>
                   <td className="py-2 pr-4 font-semibold text-zinc-500 border-none">Total Bahan Ajar</td>
-                  <td className="py-2 text-zinc-700 dark:text-zinc-300 border-none">{totalChapters} Bab (${totalWeeks} Minggu Efektif)</td>
+                  <td className="py-2 text-zinc-700 dark:text-zinc-300 border-none">{totalChapters} Bab ({totalWeeks} Minggu Efektif)</td>
                 </tr>
                 <tr>
                   <td className="py-2 pr-4 font-semibold text-zinc-500 border-none">Rekap JP Tahun</td>
@@ -138,17 +138,33 @@ export default function Step3Review({ state, onEdit, onGenerate }: Step3ReviewPr
                 className="text-xs bg-emerald-100/40 dark:bg-emerald-950/40 border border-emerald-350 dark:border-emerald-800 text-emerald-800 dark:text-emerald-350 px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5"
               >
                 <span className="font-semibold text-emerald-600 font-mono text-[10px]">{k.arabicName}</span>
-                {k.name.split(" ")[0]}
+                {k.name}
               </span>
             ))}
           </div>
         </div>
 
         {/* 3. Validation Checklist Grid */}
-        <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-3">
-          <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wiest flex items-center gap-1.5 mb-2">
-            <CheckSquare className="w-4 h-4 text-emerald-500" /> Indikator Kepatuhan BSKAP 2025 & Kemenag RI
-          </h4>
+        <div className="p-5 rounded-xl border border-emerald-150 bg-emerald-50/15 dark:border-emerald-900/35 dark:bg-emerald-950/5 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-100/30 dark:border-zinc-800 pb-3">
+            <div>
+              <h4 className="text-xs font-extrabold text-emerald-850 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                <CheckSquare className="w-4 h-4 text-emerald-600" /> Sinkronisasi Panduan KBC Kemenag RI & BSKAP 2025
+              </h4>
+              <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                Rumusan acuan berfikir diselaraskan secara komprehensif dengan regulasi & filosofi KBC.
+              </p>
+            </div>
+            <a
+              href="https://drive.google.com/file/d/1vloszu3HP8Sr50lFmBdDMYndJcLCA8bg/view?usp=sharing"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-lg shadow-sm transition-all animate-pulse"
+            >
+              <Heart className="w-3 h-3 fill-current text-rose-300" />
+              Buku Panduan KBC Resmi (PDF)
+            </a>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             {/* Rule 1 */}
             <div className="flex items-start gap-2 text-zinc-650 dark:text-zinc-400">
@@ -163,7 +179,7 @@ export default function Step3Review({ state, onEdit, onGenerate }: Step3ReviewPr
             {/* Rule 3 */}
             <div className="flex items-start gap-2 text-zinc-650 dark:text-zinc-400">
               <span className="text-emerald-600 font-bold">✓</span>
-              <span><strong>Insersi Afektif Terjaga:</strong> Nilai cinta kasih (${activeKbcs.map(k=>k.name.split(" ")[0]).join(", ")}) dipadukan di kolom khusus TP.</span>
+              <span><strong>Blueprint Karakter Cinta:</strong> Acuan berfikir didasarkan mutlak pada nilai ({activeKbcs.map(k=>k.name).join(", ")}) dari buku panduan resmi KBC.</span>
             </div>
             {/* Rule 4 */}
             <div className="flex items-start gap-2 text-zinc-650 dark:text-zinc-400">

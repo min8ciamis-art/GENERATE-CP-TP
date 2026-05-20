@@ -30,7 +30,7 @@ const DEFAULT_STATE: GeneratorState = {
   jenjang: "MI",
   selectedGrade: "mi_3", // Kelas 3
   selectedSubject: "quran_hadis", // Al-Qur'an Hadis PAI
-  selectedKbcValues: ["rahmah", "kesantunan", "moderasi"],
+  selectedKbcValues: ["cinta_allah_rasul", "cinta_ilmu", "cinta_diri_sesama"],
   jpPerWeek: 2,
   effectiveWeeks: 18,
   tpPerChapter: 2,

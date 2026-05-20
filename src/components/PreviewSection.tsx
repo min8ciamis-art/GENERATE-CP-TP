@@ -43,6 +43,8 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
   
   const subjects = getSubjects(state.jenjang);
   const subjectLabel = subjects.find(s => s.id === state.selectedSubject)?.name || state.selectedSubject;
+  const currentSubjectObj = subjects.find(s => s.id === state.selectedSubject);
+  const isAgama = currentSubjectObj ? currentSubjectObj.category === "PAI/Bahasa Arab" : false;
 
   const cpList = getCpElements(state.jenjang, state.selectedGrade, state.selectedSubject);
   const selectedKbc = KBC_VALUES.filter(k => state.selectedKbcValues.includes(k.id));
@@ -115,27 +117,104 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
         {/* Tab Content Preview Container */}
         <div className="py-6 px-6 max-h-[500px] overflow-y-auto">
           {activeTab === "cp" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 text-zinc-800 dark:text-zinc-150">
-              <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-1.5">
-                Capaian Pembelajaran (CP) Elemen - Regulasi BSKAP 2025
-              </h3>
-              <p className="text-xs text-zinc-500 leading-relaxed text-justify">
-                Merupakan pemetaan elemen dan uraian capaian pembelajaran mata pelajaran <strong>{subjectLabel}</strong> tingkat <strong>{gradeLabel}</strong> sesuai standar kelulusan lembaga kependidikan islam Kementerian Agama RI.
-              </p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 text-zinc-800 dark:text-zinc-150">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-base font-extrabold text-zinc-900 dark:text-zinc-50 flex items-center gap-1.5">
+                    Capaian Pembelajaran (CP) Elemen - Regulasi Resmi
+                  </h3>
+                  <p className="text-xs text-zinc-500 leading-relaxed mt-0.5">
+                    Pemetaan elemen dan uraian capaian pembelajaran mata pelajaran <strong>{subjectLabel}</strong> tingkat <strong>{gradeLabel}</strong> sesuai acuan kurikulum nasional.
+                  </p>
+                </div>
+              </div>
 
-              <div className="overflow-x-auto rounded-xl border border-zinc-100 dark:border-zinc-800">
+              {/* Dual-Regulation Interactive References Summary Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* General Curriculum Referencing */}
+                <div className={`p-4 rounded-[18px] border transition-all ${!isAgama ? "bg-emerald-50/30 border-emerald-300 dark:bg-emerald-950/20 dark:border-emerald-800/40" : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800/80"}`}>
+                  <div className="flex justify-between items-start">
+                    <span className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md ${!isAgama ? "bg-emerald-600 text-white" : "bg-zinc-100 dark:bg-zinc-850 text-zinc-500"}`}>
+                      {!isAgama ? "Aktif Digunakan (Mapel Umum)" : "Acuan Mapel Umum"}
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-xs mt-2.5 text-zinc-850 dark:text-zinc-100">Capaian Pembelajaran Mapel Umum</h4>
+                  <p className="text-[11px] text-zinc-500 mt-1 leading-relaxed">
+                    Sesuai Keputusan Kepala BSKAP No. 032/H/KR/2024 tentang pembaruan kurikulum nasional madrasah & sekolah umum.
+                  </p>
+                  <a
+                    href="https://drive.google.com/file/d/1r4zWBbhP8Lo3fG30m9htzBbVvHi9qjzW/view?usp=sharing"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 hover:underline"
+                  >
+                    Buka Dokumen Resmi BSKAP 2024 (PDF) ↗
+                  </a>
+                </div>
+
+                {/* Islamic / Religious PAI Curriculum Referencing */}
+                <div className={`p-4 rounded-[18px] border transition-all ${isAgama ? "bg-emerald-50/30 border-emerald-300 dark:bg-emerald-950/20 dark:border-emerald-800/40" : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800/50"}`}>
+                  <div className="flex justify-between items-start">
+                    <span className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md ${isAgama ? "bg-emerald-600 text-white" : "bg-zinc-100 dark:bg-zinc-850 text-zinc-500"}`}>
+                      {isAgama ? "Aktif Digunakan (Khas Agama)" : "Acuan Mapel Agama"}
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-xs mt-2.5 text-zinc-850 dark:text-zinc-100">Capaian Pembelajaran Mapel Agama & PAI</h4>
+                  <p className="text-[11px] text-zinc-500 mt-1 leading-relaxed">
+                    Sesuai SK Dirjen Pendis Nomor: 9941 / 2025 tentang Capaian Pembelajaran Pendidikan Agama Islam &amp; Bahasa Arab pada Kurikulum Merdeka di Madrasah.
+                  </p>
+                  <a
+                    href="https://drive.google.com/file/d/11vPVH7-e2yBODBTO4ioiBLXuOAkvlj2D/view?usp=sharing"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 hover:underline"
+                  >
+                    Buka SK Dirjen Pendis No. 9941 / 2025 (PDF) ↗
+                  </a>
+                </div>
+              </div>
+
+              {/* Table CP List elements */}
+              <div className="overflow-x-auto rounded-xl border border-zinc-150 dark:border-zinc-800 shadow-xs">
                 <table className="w-full text-xs text-left">
                   <thead>
-                    <tr className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-150 dark:border-zinc-800 text-zinc-500 font-bold">
+                    <tr className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 font-bold">
                       <th className="p-3 w-1/4">Elemen CP</th>
-                      <th className="p-3">Gagasan & Kompetensi CP BSKAP 2025</th>
+                      <th className="p-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <span>Gagasan & Kompetensi CP {isAgama ? "SK Dirjen Pendis 9941/2025 (Agama)" : "BSKAP 2024 (Umum)"}</span>
+                          <a
+                            href={isAgama ? "https://drive.google.com/file/d/11vPVH7-e2yBODBTO4ioiBLXuOAkvlj2D/view?usp=sharing" : "https://drive.google.com/file/d/1r4zWBbhP8Lo3fG30m9htzBbVvHi9qjzW/view?usp=sharing"}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-700 dark:text-emerald-350 rounded font-bold text-[9px] transition-all border border-emerald-500/20"
+                          >
+                            Unduh Lampiran Resmi ↗
+                          </a>
+                        </div>
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {cpList.map((cp, idx) => (
                       <tr key={idx} className="hover:bg-zinc-50/20 dark:hover:bg-zinc-950/10">
                         <td className="p-3 font-bold text-zinc-900 dark:text-white">{cp.element}</td>
-                        <td className="p-3 leading-relaxed text-zinc-650 dark:text-zinc-400">{cp.description}</td>
+                        <td className="p-3 leading-relaxed text-zinc-650 dark:text-zinc-400">
+                          <div>{cp.description}</div>
+                          <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 bg-zinc-100 text-zinc-500 dark:bg-zinc-805 dark:text-zinc-400 rounded">
+                              {isAgama ? "Sumber: SK Dirjen Pendis 9941/2025" : "Sumber: SK BSKAP 032/H/KR/2024"}
+                            </span>
+                            <a
+                              href={isAgama ? "https://drive.google.com/file/d/11vPVH7-e2yBODBTO4ioiBLXuOAkvlj2D/view?usp=sharing" : "https://drive.google.com/file/d/1r4zWBbhP8Lo3fG30m9htzBbVvHi9qjzW/view?usp=sharing"}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-[9px] text-emerald-700 dark:text-emerald-450 hover:underline font-bold"
+                            >
+                              Verifikasi Standar CP ↗
+                            </a>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -226,7 +305,7 @@ export default function PreviewSection({ state, onReset }: PreviewSectionProps) 
                           <td className="p-3 text-center font-bold text-zinc-800 dark:text-zinc-200">{ch.weeks * ch.jp} JP</td>
                           <td className="p-3 text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
                             - Beradab (Ta'addub)<br/>
-                            - Moderat Saling Cinta ({kbcObj.name.split(" ")[0]})
+                            - {kbcObj.name} ({kbcObj.arabicName})
                           </td>
                         </tr>
                       );
