@@ -1,0 +1,6 @@
+{
+  "name": "EduGen Pro - Edisi Kurikulum Berbasis Cinta",
+  "description": "Generator otomatis perangkat pembelajaran Kurikulum Merdeka Terintegrasi KBC Kemenag & BSKAP 2025 untuk RA, MI, MTs, dan MA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
